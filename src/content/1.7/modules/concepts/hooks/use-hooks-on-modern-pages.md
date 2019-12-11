@@ -232,13 +232,13 @@ We could (of course) use Smarty to render a template, but it's a chance to disco
 public function hookDisplayDashboardToolbarIcons($params)
 {
     if ($this->isSymfonyContext() && $params['route'] === 'admin_product_catalog') {
-        $products = $this->getProducts(1);
+        $products = $this->get('product_repository')->findAllByLangId(1);
         $productsXml = $this->serializeProducts($products);
         $filepath = _PS_ROOT_DIR_.'/products.xml';
 
         $this->writeFile($productsXml, $filepath);
 
-        return $this->get('twig')->render('@PrestaShop/Foo/download_link.twig',[
+        return $this->get('twig')->render('@Modules/Foo/templatefolder/download_link.twig',[
             'filepath' => _PS_BASE_URL_.'/products.xml',
         ]);
     }
@@ -252,7 +252,7 @@ We have extracted business logic into specific functions.
 And now, the template:
 
 ```twig
-{# in views/PrestaShop/Foo/download_link.twig #}
+{# in modules/Foo/templateFolder/download_link.twig #}
 <a id="desc-product-export" class="list-toolbar-btn" href="{{ filepath }}" download>
   <b data-toggle="pstooltip" class="label-tooltip" data-original-title="{{ "Export XML"|trans({}, 'Module.Foo') }}" data-html="true" data-placement="top">
     <i class="material-icons">cloud_upload</i>
